@@ -8,7 +8,7 @@ This function will take an SQL file with DDL instructions for `MySQL` and conver
 
 This gonna help you to use your existing database model, or DDL script, to create collections in Appwrite.
 
-At the moment it converts tables, columns, primary keys and unique constraints. Also `NOT NULL` as required fields, also supports numeric types, strings, and dates.
+At the moment it converts tables, columns, primary keys and unique constraints. Also `NOT NULL` as required fields, also supports numeric types, strings, `enums`, and dates.
 
 > At this moment, `collections_id` will be the same as the table name in lowercase, and `collection_name` will be the same as the table name in uppercase.
 
@@ -70,6 +70,7 @@ You can upload existing models to the website or create your own. Then you can e
 - [x] Convert single primary keys to indexes
 - [x] Convert single unique contraints to indexes
 - [x] Not null as required fields
+- [x] Enums supported
 - [ ] Support all datatypes
 - [ ] Suport composite primary keys
 - [ ] Suport composite unique contraints
