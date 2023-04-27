@@ -18,6 +18,12 @@ Just put your SQL file in the `sql` folder and run the function. The output will
 
 You can also modify `DB_ID` constant in `main.py` to change the id of the database in the JSON file.
 
+Just open a terminal inside the folder and run:
+
+```sh
+python main.py
+```
+
 **Expected format** (`ALTER TABLE` if present, will be ignored):
 
 ```sql
@@ -43,6 +49,7 @@ CREATE TABLE `PERSONS` (
   `id_city` INTEGER NOT NULL,
 );
 ```
+
 
 ## 👉 Example
 
