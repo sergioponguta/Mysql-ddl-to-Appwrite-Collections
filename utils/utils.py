@@ -20,7 +20,7 @@ def fix_enum(text):
 
 def list_sql_files():
     sql_files = []
-    for file in os.listdir("../sql"):
+    for file in os.listdir("./sql"):
         if file.endswith(".sql"):
             sql_files.append(file)
     return sql_files
