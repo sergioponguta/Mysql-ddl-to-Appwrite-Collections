@@ -3,7 +3,7 @@ import ddl_to_appwrite as converter
 import json
 import sys
 
-DB_ID = "test_db"
+DB_ID = "example_db"
 
 
 def main():
@@ -24,6 +24,9 @@ def main():
                 json_schema = converter.ddl_table_to_json(table, DB_ID)
                 json_schema = json.loads(json_schema)
                 collections_result["collections"].append(json_schema)
+
+            # comment this if you don't want to add meta_data collection
+            collections_result["collections"].append(converter.get_meta_data_collection(DB_ID))
 
             # Uncomment this to print the result
             # print(json.dumps(collections_result, indent=2))

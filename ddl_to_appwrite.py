@@ -73,6 +73,8 @@ def ddl_table_to_json(ddl, db_id: str):
         elif col_type in ['CHAR', 'VARCHAR', 'TEXT', 'TINYTEXT', 'MEDIUMTEXT', 'LONGTEXT']:
             col_schema["type"] = 'string'
             col_schema["size"] = int(col_size) if col_size else None
+        elif col_type in ['BOOL', 'BOOLEAN']:
+            col_schema["type"] = 'boolean'
         elif col_type in ['DATE', 'TIME', 'DATETIME', 'TIMESTAMP']:
             col_schema["type"] = 'datetime'
             col_schema["format"] = ""
@@ -80,7 +82,9 @@ def ddl_table_to_json(ddl, db_id: str):
             col_schema["type"] = 'string'
             col_schema["format"] = "enum"
             col_schema["elements"] = col_enum.replace("'", "").split(",") if col_enum else None
-
+        else:
+            col_schema["type"] = 'string'
+            col_schema["size"] = 255
         # Add column to JSON schema
         json_schema["attributes"].append(col_schema)
 
@@ -124,3 +128,76 @@ def ddl_table_to_json(ddl, db_id: str):
     json_string = json.dumps(json_schema, indent=2)
 
     return json_string
+
+
+def get_meta_data_collection(db_id: str):
+    return {
+        "$id": "_meta_data",
+        "$createdAt": generate_datetime_now(),
+        "$updatedAt": generate_datetime_now(),
+        "$permissions": [],
+        "databaseId": db_id,
+        "name": "_META_DATA",
+                "enabled": True,
+                "attributes": [
+                    {
+                        "key": "key_meta_data",
+                        "type": "string",
+                        "status": "available",
+                        "required": True,
+                        "array": False,
+                        "default": None,
+                        "size": 30
+                    },
+                    {
+                        "key": "string_meta_data",
+                        "type": "string",
+                        "status": "available",
+                        "required": False,
+                        "array": False,
+                        "default": None,
+                        "size": 30
+                    },
+                    {
+                        "key": "num_meta_data",
+                        "type": "double",
+                        "status": "available",
+                        "required": False,
+                        "array": False,
+                        "default": None,
+                        "min": -9223372036854775808,
+                        "max": 9223372036854775807
+                    },
+                    {
+                        "key": "date_meta_data",
+                        "type": "datetime",
+                        "status": "available",
+                        "required": False,
+                        "array": False,
+                        "default": None,
+                        "format": ""
+                    },
+                    {
+                        "key": "bool_meta_data",
+                        "type": "boolean",
+                        "status": "available",
+                        "required": False,
+                        "array": False,
+                        "default": None,
+                        "format": ""
+                    },
+        ],
+        "indexes": [
+                    {
+                        "key": "IDX_KEY_META_DATA",
+                        "type": "unique",
+                        "status": "available",
+                        "attributes": [
+                            "key_meta_data"
+                        ],
+                        "orders": [
+                            "DESC"
+                        ]
+                    }
+        ]
+    }
