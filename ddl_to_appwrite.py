@@ -132,12 +132,12 @@ def ddl_table_to_json(ddl, db_id: str):
 
 def get_meta_data_collection(db_id: str):
     return {
-        "$id": "_meta_data",
+        "$id": "meta_data",
         "$createdAt": generate_datetime_now(),
         "$updatedAt": generate_datetime_now(),
         "$permissions": [],
         "databaseId": db_id,
-        "name": "_META_DATA",
+        "name": "META_DATA",
                 "enabled": True,
                 "attributes": [
                     {

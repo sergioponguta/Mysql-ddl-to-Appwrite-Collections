@@ -3,7 +3,7 @@ import ddl_to_appwrite as converter
 import json
 import sys
 
-DB_ID = "example_db"
+DB_ID = "db_smb_base"
 
 
 def main():
