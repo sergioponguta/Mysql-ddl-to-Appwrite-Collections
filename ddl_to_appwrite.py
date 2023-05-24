@@ -15,7 +15,7 @@ def list_ddl_tables(ddl):
     return table_list
 
 
-def ddl_table_to_json(ddl, db_id: str):
+def ddl_table_to_json(ddl, db_id: str, ignore_primary_key=False):
     # Extract table name
     table_name = re.search(r'CREATE TABLE (\w+)', ddl).group(1)
 
@@ -40,6 +40,7 @@ def ddl_table_to_json(ddl, db_id: str):
     primary_key = []
 
     for col_def in column_defs:
+
         col_name, col_type, col_size, col_default, col_enum = col_def[:5]
 
         # Skip this
@@ -50,6 +51,10 @@ def ddl_table_to_json(ddl, db_id: str):
         if col_type == 'ENUM':
             col_enum = col_size
             col_size = None
+
+        if ignore_primary_key:
+            if 'PRIMARY KEY' in ddl.split(col_name)[1].split(',')[0]:
+                continue
 
         # Create JSON object for column
         col_schema = {
@@ -92,21 +97,25 @@ def ddl_table_to_json(ddl, db_id: str):
         if 'UNIQUE' in ddl.split(col_name)[1].split(',')[0]:
             unique_indexes.append(col_name)
 
-        # Check if the column has the PRIMARY KEY keyword
-        if 'PRIMARY KEY' in ddl.split(col_name)[1].split(',')[0]:
-            col_schema["required"] = True
-            primary_key.append(col_name)
+        if not ignore_primary_key:
+            # Check if the column has the PRIMARY KEY keyword
+            if 'PRIMARY KEY' in ddl.split(col_name)[1].split(',')[0]:
+                col_schema["required"] = True
+                primary_key.append(col_name)
 
-    # Add primary key index
-    json_schema["indexes"] = [
-        {
-            "key": f"IDX_{table_name.upper()}_PK"[:35],
-            "type": "unique",
-            "status": "available",
-            "attributes": primary_key,
-            "orders": ["DESC"]
-        }
-    ]
+    if not ignore_primary_key:
+        # Add primary key index
+        json_schema["indexes"] = [
+            {
+                "key": f"IDX_{table_name.upper()}_PK"[:35],
+                "type": "unique",
+                "status": "available",
+                "attributes": primary_key,
+                "orders": ["DESC"]
+            }
+        ]
+    else:
+        json_schema["indexes"] = []
 
     # Add unique indexes
     if unique_indexes:

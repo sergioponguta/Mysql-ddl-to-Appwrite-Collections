@@ -2,8 +2,9 @@ import utils.utils as utils
 import ddl_to_appwrite as converter
 import json
 import sys
+import traceback
 
-DB_ID = "db_smb_base"
+DB_ID = "db_smb_reg_per_default"
 
 
 def main():
@@ -21,7 +22,7 @@ def main():
             collections_result = {"collections": []}
 
             for table in table_list:
-                json_schema = converter.ddl_table_to_json(table, DB_ID)
+                json_schema = converter.ddl_table_to_json(table, DB_ID, ignore_primary_key=True)
                 json_schema = json.loads(json_schema)
                 collections_result["collections"].append(json_schema)
 
@@ -36,6 +37,7 @@ def main():
 
         print("Process completed...")
     except Exception as e:
+        print(traceback.format_exc())
         print(e)
         print("Process failed...")
         sys.exit(1)
